@@ -18,7 +18,7 @@
   "bugs": {
     "url": "https://github.com/IMSP2596/ReactApp-with-GHPages/issues"
   },
-  "homepage": "https://github.com/IMSP2596/ReactApp-with-GHPages#readme",
+  "homepage": "https://github.com/IMSP2596/ReactApp-with-GHPages/index.html",
   "devDependencies": {
     "@babel/core": "^7.26.0",
     "@babel/preset-env": "^7.26.0",
