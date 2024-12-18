@@ -31,7 +31,7 @@ jobs:
           REPO_NAME: ${{ github.repository }}
         run: |
           if [ -f "README.md" ]; then
-            sed -i "s/{{repo_name}}/${REPO_NAME##*/}/g" README.md
+            sed -i "s/ReactApp-with-GHPages/${REPO_NAME##*/}/g" README.md
           else
             echo "README.md file not found. Skipping."
           fi
