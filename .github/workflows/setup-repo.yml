@@ -18,7 +18,7 @@ jobs:
         run: |
           if [ -f ".github/.initialized" ]; then
             echo "The repository has already been initialized."
-            exit 0
+            exit 1
           fi
 
       - name: Replace {{repo_name}} in package.json
