@@ -1,32 +1,41 @@
-name: Setup Repository
+name: Run Once When package.json is Created
 
 on:
   push:
-    branches:
-      - main  # Trigger only when changes are pushed to the main branch.
+    paths:
+      - package.json  # Trigger only when package.json is added or updated
 
 jobs:
-  update-package-name:
+  package-json-created:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Extract repository name
-        run: echo "REPO_NAME=${{ github.repository }}" >> $GITHUB_ENV
-
-      - name: Update package.json
+      - name: Check if package.json has been processed before
         run: |
-          REPO_NAME=${{ github.repository }}
-          jq ".name = \"$(basename $REPO_NAME)\"" package.json > temp.json
-          mv temp.json package.json
+          if [ -f ".github/.package-json-created" ]; then
+            echo "package.json has already been processed, exiting."
+            exit 0
+          fi
 
-      - name: Commit changes
+      - name: Process package.json
+      - name: Replace placeholders in package.json
+        run: |
+          REPO_NAME=$REPO_NAME
+          sed -i "s/{{repo_name}}/$REPO_NAME/g" package.json
+
+      - name: Create flag file to prevent future runs
+        run: |
+          mkdir -p .github
+          echo "package.json processed" > .github/.package-json-created
+
+      - name: Commit flag file
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add package.json
-          git commit -m "Update package.json with repository name"
+          git config --global user.name "Shubham Patil"
+          git config --global user.email "imsp2596@gmail.com"
+          git add .github/.package-json-created
+          git commit -m "Flag file to prevent further package.json processing and Replace {{repo_name}} with $REPO_NAME in package.json"
           git push
