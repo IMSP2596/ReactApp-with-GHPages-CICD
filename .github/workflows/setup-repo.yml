@@ -32,6 +32,7 @@ jobs:
         run: |
           if [ -f "README.md" ]; then
             sed -i "s/{{repo_name}}/${REPO_NAME##*/}/g" README.md
+            echo "README.md file found. Updating."
           else
             echo "README.md file not found. Skipping."
           fi
