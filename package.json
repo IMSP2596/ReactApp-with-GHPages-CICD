@@ -16,7 +16,7 @@
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/IMSP2596/ReactApp-with-GHPages/issues"
+    "url": "https://github.com/IMSP2596/{{repo_name}}/issues"
   },
   "homepage": "https://github.com/IMSP2596/{{repo_name}}/index.html",
   "devDependencies": {
