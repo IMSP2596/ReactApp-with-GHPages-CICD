@@ -31,7 +31,7 @@ jobs:
           REPO_NAME: ${{ github.repository }}
         run: |
           if [ -f "README.md" ]; then
-            sed -i "s/ReactApp-with-GHPages/${REPO_NAME##*/}/g" README.md
+            sed -i "s/{{repo_name}}/${REPO_NAME##*/}/g" README.md
           else
             echo "README.md file not found. Skipping."
           fi
@@ -44,7 +44,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          git config --global user.name "github-actions[bot]"
+          git config --global user.name "github-actions"
           git add package.json .github/.initialized
           git commit -m "Initialize repository with repo name"
           git push origin $(git rev-parse --abbrev-ref HEAD)
