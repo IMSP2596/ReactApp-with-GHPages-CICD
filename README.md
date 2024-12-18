@@ -1,4 +1,4 @@
-﻿# ReactApp-with-GHPages
+﻿# {{repo_name}}
 
  Run below command & genrate private key & public key.
  - add deploy keys & private key
