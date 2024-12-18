@@ -11,7 +11,9 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-
+      - name: Pull the latest changes to avoid conflicts
+        run: |
+          git pull origin $(git rev-parse --abbrev-ref HEAD) --rebase
       - name: Check if package.json has been processed before
         run: |
           if [ -f ".github/.package-json-created" ]; then
@@ -33,11 +35,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           git config --global user.name "Shubham Patil"
-          git config --global user.email "imsp2596@gmail.com"
-          
-          # Pull the latest changes to avoid conflicts
-          git pull origin $(git rev-parse --abbrev-ref HEAD) --rebase
-          
+          git config --global user.email "imsp2596@gmail.com"                            
           git add .github/.package-json-created
           git commit -m "Flag file to prevent further package.json processing and Replace {{repo_name}} with $REPO_NAME in package.json"
           git push
