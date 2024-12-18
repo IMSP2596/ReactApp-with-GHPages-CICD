@@ -1,0 +1,30 @@
+name: Setup Repository
+
+on:
+  push:
+    branches:
+      - main  # Trigger only when changes are pushed to the main branch.
+
+jobs:
+  update-package-name:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Extract repository name
+        run: echo "REPO_NAME=${{ github.repository }}" >> $GITHUB_ENV
+
+      - name: Update package.json
+        run: |
+          REPO_NAME=${{ github.repository }}
+          jq ".name = \"$(basename $REPO_NAME)\"" package.json > temp.json
+          mv temp.json package.json
+
+      - name: Commit changes
+        run: |
+          git config --global user.name "Shubham Patil"
+          git config --global user.email "imsp2596@gmail.com"
+          git add package.json
+          git commit -m "Update package.json with repository name"
+          git push
