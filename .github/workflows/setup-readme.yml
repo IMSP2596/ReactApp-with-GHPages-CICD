@@ -3,7 +3,7 @@ name: Initialize Readme
 on:
   push:
     paths:
-      - READNE.md  # Trigger only when READEME.md is added or updated
+      - README.md  # Trigger only when READEME.md is added or updated
 
 jobs:
   initialize-repo:
