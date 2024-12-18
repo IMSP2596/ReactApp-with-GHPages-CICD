@@ -1,0 +1,39 @@
+name: Initialize Readme
+
+on:
+  push:
+    paths:
+      - READNE.md  # Trigger only when READEME.md is added or updated
+
+jobs:
+  initialize-repo:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name : Pull latest changes
+        run: | 
+         git pull origin $(git rev-parse --abbrev-ref HEAD) --rebase      
+      - name: Replace {{repo_name}} in README.md
+        env:
+          REPO_NAME: ${{ github.repository }}
+        run: |
+          if [ -f "README.md" ]; then
+            sed -i "s/{{repo_name}}/${REPO_NAME##*/}/g" README.md
+            echo "README.md file found. Updating."
+          else
+            echo "README.md file not found. Skipping."
+          fi
+      - name: Create flag file to mark initialization
+        run: |
+          mkdir -p .github
+          echo "Initialized Readme" > .github/.readme-initialized
+
+      - name: Commit changes
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git config --global user.name "github-actions"
+          git add READEME.md .github/.initialized
+          git commit -m "Initialize readme with repo name"
+          git push origin $(git rev-parse --abbrev-ref HEAD)
