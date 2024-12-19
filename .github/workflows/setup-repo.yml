@@ -25,17 +25,7 @@ jobs:
         env:
           REPO_NAME: ${{ github.repository }}
         run: |
-          sed -i "s/{{repo_name}}/${REPO_NAME##*/}/g" package.json
-      - name: Replace {{repo_name}} in README.md
-        env:
-          REPO_NAME: ${{ github.repository }}
-        run: |
-          if [ -f "README.md" ]; then
-            sed -i "s/{{repo_name}}/${REPO_NAME##*/}/g" README.md
-            echo "README.md file found. Updating."
-          else
-            echo "README.md file not found. Skipping."
-          fi
+          sed -i "s/{{repo_name}}/${REPO_NAME##*/}/g" package.json      
       - name: Create flag file to mark initialization
         run: |
           mkdir -p .github
