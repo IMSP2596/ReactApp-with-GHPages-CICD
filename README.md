@@ -1,4 +1,4 @@
-﻿# ReactApp-with-GHPages-CICD
+﻿# {{repo_name}}
 
 1 Modify below settings to run the workflow successfully after clone.🛠️
 
