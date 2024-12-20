@@ -4,7 +4,7 @@ import './styles/LandingPage.css';
 const App = () => {  
   return (
     <div className="container">
-      <h1 className="title">Welcome to Your React App!</h1>
+      <h1 className="title">{`Welcome to ${process.env.repo_name}!`}</h1>
       <p className="subtitle">Your journey to build something amazing starts here 🚀</p>
 
       <div className="section">
