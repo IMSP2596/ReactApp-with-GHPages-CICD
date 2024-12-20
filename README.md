@@ -11,3 +11,5 @@
  - ssh-keygen -t rsa -m pem -b 4096 -C "youremailhere@example.com" -N ""
  - add public key to Deploy keys
  - add private key to Secrets and Variables -> Actions -> Repository secret
+3 Run npm install command to install all dependencies of current project.
+4 run npm start to spin up the development server.
