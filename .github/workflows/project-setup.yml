@@ -85,6 +85,6 @@ jobs:
         run: |
           git config --global user.name "github-actions"
           git config --global user.email "actions@github.com"
-          git add README.md package.json sonar-project.properties .readme-initialized .package-initialized .sonar-initialized || echo "No changes to commit"
+          git add README.md package.json sonar-project.properties .github/.readme-initialized .github/.package-initialized .github/.sonar-initialized || echo "No changes to commit"
           git commit -m "Initialize repository with repo name" || echo "No changes to commit"
           git push origin $(git rev-parse --abbrev-ref HEAD) || echo "No changes to push"
