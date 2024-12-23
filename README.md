@@ -15,3 +15,5 @@
 3 Run npm install command to install all dependencies of current project.📦
 
 4 run npm start to spin up the development server. 🚀
+
+5 SONAR_TOKEN need to be setup
