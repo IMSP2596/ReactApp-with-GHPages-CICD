@@ -1,10 +1,11 @@
 import React from 'react';
 import './styles/LandingPage.css';
 
-const App = () => {  
+const App = () => { 
+  const repo_name=process.env.repo_name?process.env.repo_name:'React App';
   return (
     <div className="container">
-      <h1 className="title">{`Welcome to ${process.env.repo_name}!`}</h1>
+      <h1 className="title">{`Welcome to ${repo_name} !`}</h1>
       <p className="subtitle">Your journey to build something amazing starts here 🚀</p>
 
       <div className="section">
