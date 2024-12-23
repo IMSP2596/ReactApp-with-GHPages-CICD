@@ -1,17 +1,26 @@
 name: Build and Deploy
+
 on:
-  push:
-    branches:
-      - main
+  workflow_run:
+    workflows: ["SonarCloud Analysis"] 
+    types:
+      - completed
+
 jobs:
   deploy:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}  # Only run if SonarCloud was successful
     concurrency: ci-${{ github.ref }}
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout 🛎️
         uses: actions/checkout@v4
+        
+      - name : Pull latest changes
+        run: | 
+         git pull origin $(git rev-parse --abbrev-ref HEAD) --rebase
 
-      - name: Install and Build 🔧 # This example project is built using npm and outputs the result to the 'build' folder. Replace with the commands required to build your project, or remove this step entirely if your site is pre-built.
+      - name: Install and Build 🔧
         run: |
           npm ci
           npm run build
@@ -25,3 +34,15 @@ jobs:
             special-file.txt
             some/*.txt
           ssh-key: ${{ secrets.DEPLOY_KEY }}
+
+  handle_failure:
+    if: ${{ github.event.workflow_run.conclusion == 'failure' }}  # Only run if SonarCloud failed
+    runs-on: ubuntu-latest
+    needs: deploy  # Ensure this job runs after the deploy job
+    steps:
+      - name: Error Handling 🚨
+        run: |
+          echo "SonarCloud analysis failed, skipping deployment."
+            
+      - name: Fail the workflow manually
+        run: exit 1  # This forces the workflow to be marked as failed if SonarCloud fails
