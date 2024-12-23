@@ -1,4 +1,4 @@
-name: Initialize Readme
+name: sonar-projects.properties
 
 on:
   push:
