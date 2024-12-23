@@ -59,7 +59,7 @@ jobs:
           REPO_NAME: ${{ github.repository }}
         run: |
           if [ -f "sonar-project.properties" ]; then
-            sed -i "s/{{repo_name}}/${REPO_NAME##*/}/g" sonar-projects.properties
+            sed -i "s/{{repo_name}}/${REPO_NAME##*/}/g" sonar-project.properties
             echo "sonar-projects.properties file found. Updating."
           else
             echo "sonar-projects.properties file not found. Skipping."
