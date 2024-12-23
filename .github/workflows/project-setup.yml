@@ -1,11 +1,11 @@
-name: Repository Initialization
+name: Initialize Repository Components
 
 on:
   push:
     paths:
       - README.md
       - package.json
-      - sonar-project.properties
+      - sonar-projects.properties  # Trigger when any of these files are added or updated
 
 jobs:
   initialize-readme:
@@ -13,7 +13,9 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
-
+      - name: Pull latest changes
+        run: |
+          git pull origin $(git rev-parse --abbrev-ref HEAD) --rebase      
       - name: Replace {{repo_name}} in README.md
         env:
           REPO_NAME: ${{ github.repository }}
@@ -24,67 +26,80 @@ jobs:
           else
             echo "README.md file not found. Skipping."
           fi
-
-      - name: Create flag for README.md initialization
-        run: echo "Initialized Readme" > .readme-initialized
-
-  initialize-package-json:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Replace {{repo_name}} in package.json
-        env:
-          REPO_NAME: ${{ github.repository }}
+      - name: Create flag file to mark initialization
         run: |
-          if [ -f "package.json" ]; then
-            sed -i "s/{{repo_name}}/${REPO_NAME##*/}/g" package.json
-            echo "package.json file found. Updating."
-          else
-            echo "package.json file not found. Skipping."
-          fi
-
-      - name: Create flag for package.json initialization
-        run: echo "Initialized package.json" > .package-initialized
-
-  initialize-sonar-properties:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Replace {{repo_name}} in sonar-project.properties
-        env:
-          REPO_NAME: ${{ github.repository }}
-        run: |
-          if [ -f "sonar-project.properties" ]; then
-            sed -i "s/{{repo_name}}/${REPO_NAME##*/}/g" sonar-project.properties
-            echo "sonar-projects.properties file found. Updating."
-          else
-            echo "sonar-projects.properties file not found. Skipping."
-          fi
-
-      - name: Create flag for sonar-project.properties initialization
-        run: echo "Initialized sonar-project.properties" > .sonar-initialized
-
-  commit-changes:
-    needs: [initialize-readme, initialize-package-json, initialize-sonar-properties]
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Pull latest changes
-        run: |
-          git pull origin $(git rev-parse --abbrev-ref HEAD) --rebase
-
+          mkdir -p .github
+          echo "Initialized Readme" > .github/.readme-initialized
       - name: Commit changes
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           git config --global user.name "github-actions"
-          git config --global user.email "actions@github.com"
-          git add README.md package.json sonar-project.properties .github/.readme-initialized .github/.package-initialized .github/.sonar-initialized || echo "No changes to commit"
-          git commit -m "Initialize repository with repo name" || echo "No changes to commit"
-          git push origin $(git rev-parse --abbrev-ref HEAD) || echo "No changes to push"
+          git add README.md .github/.readme-initialized
+          git commit -m "Initialize readme with repo name" || echo "No changes to commit."
+          git push origin $(git rev-parse --abbrev-ref HEAD)
+
+  initialize-package-json:
+    needs: initialize-readme  # Run after the initialize-readme job
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Pull latest changes
+        run: |
+          git pull origin $(git rev-parse --abbrev-ref HEAD) --rebase
+      - name: Check if package.json has been processed
+        run: |
+          if [ -f ".github/.initialized" ]; then
+            echo "The repository has already been initialized."
+            exit 1
+          fi
+      - name: Replace {{repo_name}} in package.json
+        env:
+          REPO_NAME: ${{ github.repository }}
+        run: |
+          sed -i "s/{{repo_name}}/${REPO_NAME##*/}/g" package.json
+      - name: Create flag file to mark initialization
+        run: |
+          mkdir -p .github
+          echo "Initialized" > .github/.initialized
+      - name: Commit changes
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git config --global user.name "github-actions"
+          git add package.json .github/.initialized
+          git commit -m "Initialize repository with repo name" || echo "No changes to commit."
+          git push origin $(git rev-parse --abbrev-ref HEAD)
+
+  initialize-sonar-properties:
+    needs: initialize-package-json  # Run after the initialize-package-json job
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Pull latest changes
+        run: |
+          git pull origin $(git rev-parse --abbrev-ref HEAD) --rebase      
+      - name: Replace {{repo_name}} in sonar-projects.properties
+        env:
+          REPO_NAME: ${{ github.repository }}
+        run: |
+          if [ -f "sonar-projects.properties" ]; then
+            sed -i "s/{{repo_name}}/${REPO_NAME##*/}/g" sonar-projects.properties
+            echo "sonar-projects.properties file found. Updating."
+          else
+            echo "sonar-projects.properties file not found. Skipping."
+          fi
+      - name: Create flag file to mark initialization
+        run: |
+          mkdir -p .github
+          echo "Initialized sonar-projects.properties" > .github/.sonar-projects.properties-initialized
+      - name: Commit changes
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git config --global user.name "github-actions"
+          git add sonar-projects.properties .github/.sonar-projects.properties-initialized
+          git commit -m "Initialize sonar-projects.properties with repo name" || echo "No changes to commit."
+          git push origin $(git rev-parse --abbrev-ref HEAD)
