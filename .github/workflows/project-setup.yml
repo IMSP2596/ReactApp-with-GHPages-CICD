@@ -5,7 +5,7 @@ on:
     paths:
       - README.md
       - package.json
-      - sonar-projects.properties
+      - sonar-project.properties
 
 jobs:
   initialize-readme:
@@ -54,19 +54,19 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Replace {{repo_name}} in sonar-projects.properties
+      - name: Replace {{repo_name}} in sonar-project.properties
         env:
           REPO_NAME: ${{ github.repository }}
         run: |
-          if [ -f "sonar-projects.properties" ]; then
+          if [ -f "sonar-project.properties" ]; then
             sed -i "s/{{repo_name}}/${REPO_NAME##*/}/g" sonar-projects.properties
             echo "sonar-projects.properties file found. Updating."
           else
             echo "sonar-projects.properties file not found. Skipping."
           fi
 
-      - name: Create flag for sonar-projects.properties initialization
-        run: echo "Initialized sonar-projects.properties" > .sonar-initialized
+      - name: Create flag for sonar-project.properties initialization
+        run: echo "Initialized sonar-project.properties" > .sonar-initialized
 
   commit-changes:
     needs: [initialize-readme, initialize-package-json, initialize-sonar-properties]
@@ -85,6 +85,6 @@ jobs:
         run: |
           git config --global user.name "github-actions"
           git config --global user.email "actions@github.com"
-          git add README.md package.json sonar-projects.properties .readme-initialized .package-initialized .sonar-initialized || echo "No changes to commit"
+          git add README.md package.json sonar-project.properties .readme-initialized .package-initialized .sonar-initialized || echo "No changes to commit"
           git commit -m "Initialize repository with repo name" || echo "No changes to commit"
           git push origin $(git rev-parse --abbrev-ref HEAD) || echo "No changes to push"
