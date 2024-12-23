@@ -1,1 +1,6 @@
 node_modules
+build
+bundle.js
+bumdle.js.LICENSE.txt
+bundle.js.map
+

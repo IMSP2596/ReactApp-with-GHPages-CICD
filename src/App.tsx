@@ -2,7 +2,7 @@ import React from 'react';
 import './styles/LandingPage.css';
 
 const App = () => { 
-  const repo_name=process.env.repo_name?process.env.repo_name:'React App';
+  const repo_name=process.env.repo_name && process.env.repo_name!='{{repo_name}}'?process.env.repo_name:'React App';
   return (
     <div className="container">
       <h1 className="title">{`Welcome to ${repo_name} !`}</h1>
