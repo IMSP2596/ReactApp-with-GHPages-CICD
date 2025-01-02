@@ -27,6 +27,15 @@ jobs:
     - name: Install dependencies
       run: npm install --ignore-engines
 
+    - name: Run ESLint
+      run: npm run lint
+
+    - name: Run Prettier check
+      run: npm run check-format
+      
+    - name: Run TypeScript checks
+      run: npm run ts-check
+
     - name: Run tests and generate coverage
       run: npm test -- --coverage
 
