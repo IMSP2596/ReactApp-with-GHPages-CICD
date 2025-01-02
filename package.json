@@ -1,5 +1,5 @@
 {
-  "name": "ReactApp-with-GHPages-CICD",
+  "name": "{{repo_name}}",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -10,21 +10,21 @@
     "ts-check": "tsc --noEmit p tsconfig.json",
     "prepare": "husky install",
     "prestart": "jest",
-    "start": "webpack serve --config webpack/webpack.config.js --env env=dev --env repo_name=ReactApp-with-GHPages-CICD  --open --hot",
-    "build": "webpack --config webpack/webpack.config.js --env env=prod --env repo_name=ReactApp-with-GHPages-CICD",
+    "start": "webpack serve --config webpack/webpack.config.js --env env=dev --env repo_name={{repo_name}}  --open --hot",
+    "build": "webpack --config webpack/webpack.config.js --env env=prod --env repo_name={{repo_name}}",
     "test": "jest"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/IMSP2596/ReactApp-with-GHPages-CICD.git"
+    "url": "git+https://github.com/IMSP2596/{{repo_name}}.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/IMSP2596/ReactApp-with-GHPages-CICD/issues"
+    "url": "https://github.com/IMSP2596/{{repo_name}}/issues"
   },
-  "homepage": "https://github.com/IMSP2596/ReactApp-with-GHPages-CICD/index.html",
+  "homepage": "https://github.com/IMSP2596/{{repo_name}}/index.html",
   "devDependencies": {
     "@babel/core": "^7.26.0",
     "@babel/plugin-proposal-decorators": "^7.25.9",
