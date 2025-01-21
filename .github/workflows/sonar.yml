@@ -33,7 +33,10 @@ jobs:
       run: npm install --ignore-engines
 
     - name: Run ESLint
-      run: npm run lint
+      run: npm run lint --fix
+
+    - name: Format code
+      run: npx prettier --write .
 
     - name: Run Prettier check
       run: npm run check-format
