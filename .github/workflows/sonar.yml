@@ -15,10 +15,14 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
-    - name : Pull latest changes
-      run: | 
-         git pull origin $(git rev-parse --abbrev-ref HEAD) --no-rebase
-         
+      
+    - name: Pull latest changes
+      run: |
+        git pull origin $(git rev-parse --abbrev-ref HEAD) --no-rebase --allow-unrelated-histories || true
+        if [ $? -ne 0 ]; then
+          echo "Unrelated histories detected, skipping merge."
+          exit 1
+        fi        
     - name: Debug Logs
       run: |
         git status
